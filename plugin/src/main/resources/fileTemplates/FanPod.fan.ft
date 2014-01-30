@@ -1,0 +1,7 @@
+@podDepends = [${POD_DEPENDS}]
+@podSrcDirs = [${POD_SRC_DIRS}]
+
+pod ${NAME}
+{
+
+}

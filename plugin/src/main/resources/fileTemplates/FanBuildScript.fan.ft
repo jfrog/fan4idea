@@ -1,0 +1,20 @@
+using build
+
+class Build : BuildPod
+{
+
+  new make()
+  {
+    podName = "${NAME}"
+    summary = "${DESCRIPTION}"
+    version = Version.fromStr("${VERSION}")
+    depends = [${POD_DEPENDS}]
+    srcDirs = [${POD_SRC_DIRS}]
+    resDirs = [${POD_RES_DIRS}]
+    docApi  = ${DOC_API}
+    docSrc  = ${DOC_SRC}
+    outDir  = ${OUT_DIR}
+    index   = [${INDEXES}]
+    meta    = [${METAS}]
+  }
+}

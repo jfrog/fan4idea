@@ -1,0 +1,128 @@
+<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
+<idea-plugin version="2" use-idea-classloader="true" url="http://wiki.jfrog.org/confluence/display/FANP/Home">
+    <name>FAN Support</name>
+    <description>FAN programming language support</description>
+    <version>0.0.7</version>
+    <category>Custom Languages</category>
+    <vendor logo="/icons/fileTypes/fan.PNG"
+            url="http://wiki.jfrog.org/confluence/display/FANP/Home">Dror Bereznitsky and Fred Simon
+    </vendor>
+    <idea-version since-build="9000"/>
+    <change-notes>
+        http://wiki.jfrog.org/confluence/display/FANP/Release+Notes+-+Fan+Idea+Plugin+-+Version+0.0.7
+    </change-notes>
+    <resource-bundle>org.fandev.lang.fan.FanBundle</resource-bundle>
+    <extensions defaultExtensionNs="com.intellij">
+        <projectImportProvider implementation="org.fandev.module.FanProjectImportProvider"/>
+        <projectImportBuilder implementation="org.fandev.module.wizard.FanProjectBuilder"/>
+        
+        <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+        <colorSettingsPage implementation="org.fandev.lang.fan.highlighting.FanColorsAndFontsPage"/>
+
+        <stubElementTypeHolder class="org.fandev.lang.fan.FanElementTypes"/>
+
+        <!--Stubs index-->
+        <stubIndex implementation="org.fandev.lang.fan.psi.stubs.index.FanShortClassNameIndex"/>
+        <stubIndex implementation="org.fandev.lang.fan.psi.stubs.index.FanSlotNameIndex"/>
+        <stubIndex implementation="org.fandev.lang.fan.psi.stubs.index.FanFacetNameSlotIndex"/>
+
+        <gotoClassContributor implementation="org.fandev.idea.gotoclass.FanGoToClassContributor"/>
+        <gotoSymbolContributor implementation="org.fandev.idea.gotoclass.FanGoToSlotContributor"/>
+        <codeInsight.parameterInfo language="Fantom"
+            implementationClass="org.fandev.lang.fan.parameterInfo.FanParameterInfoHandler"/>
+
+        <codeInsight.overrideMethod language="Fantom"
+                                    implementationClass="org.fandev.idea.overrideImplement.FanOverrideMethodsHandler"/>
+
+        <fileTypeFactory implementation="org.fandev.lang.fan.FanSupportLoader"/>
+        <syntaxHighlighter key="Fantom" factoryClass="org.fandev.lang.fan.highlighting.FanSyntaxHighlighterProvider"/>
+        <treeStructureProvider implementation="org.fandev.lang.fan.projectView.FanTreeStructureProvider"/>
+
+        <lang.parserDefinition language="Fantom" implementationClass="org.fandev.lang.fan.FanParserDefinition"/>
+
+        <lang.psiStructureViewFactory language="Fantom"
+                                      implementationClass="org.fandev.lang.fan.structure.FanStructureViewBuilderFactory"/>
+        <lang.commenter language="Fantom" implementationClass="org.fandev.lang.fan.highlighting.FanCommenter"/>
+        <lang.braceMatcher language="Fantom" implementationClass="org.fandev.lang.fan.highlighting.FanPairedBraceMatcher"/>
+        <lang.findUsagesProvider language="Fantom" implementationClass="org.fandev.findUsages.FanFindUsagesProvider"/>
+
+        <compiler implementation="org.fandev.compiler.FanCompiler"/>
+        <debuggerClassFilterProvider implementation="org.fandev.debugger.FanDebuggerClassFilterProvider"/>        
+
+        <quoteHandler fileType="Fan" className="org.fandev.lang.fan.editor.FanQuoteHandler"/>
+
+        <typeHierarchyProvider language="Fantom"
+                               implementationClass="com.intellij.ide.hierarchy.type.JavaTypeHierarchyProvider"/>
+
+        <fileTemplateGroup implementation="org.fandev.actions.generation.FanTemplatesFactory"/>
+
+        <!--Run/debug-->
+        <configurationType implementation="org.fandev.runner.FanScriptRunConfigurationType"/>
+        <configurationProducer implementation="org.fandev.runner.FanScriptRunConfigurationProducer"/>
+        <configurationType implementation="org.fandev.runner.FanPodRunConfigurationType"/>
+        <configurationProducer implementation="org.fandev.runner.FanPodRunConfigurationProducer"/>
+        <configurationType implementation="org.fandev.runner.FanTestRunConfigurationType"/>
+        <configurationProducer implementation="org.fandev.runner.FanTestRunConfigurationProducer"/>
+
+        <moduleService serviceInterface="org.fandev.settings.FanModuleSettingsStorage"
+                       serviceImplementation="org.fandev.settings.FanModuleSettingsStorage"/>
+
+        <projectService serviceInterface="org.fandev.lang.fan.psi.FanPsiElementFactory"
+                        serviceImplementation="org.fandev.lang.fan.psi.FanPsiElementFactory"/>
+    </extensions>
+
+    <application-components>
+        <component>
+            <implementation-class>org.fandev.lang.fan.FanLoader</implementation-class>
+        </component>
+        <component>
+            <implementation-class>org.fandev.sdk.FanSdkType</implementation-class>
+        </component>
+        <component>
+            <implementation-class>org.fandev.module.FanModuleType</implementation-class>
+        </component>
+    </application-components>
+
+    <project-components>
+        <component>
+            <implementation-class>org.fandev.index.FanIndex</implementation-class>
+        </component>
+    </project-components>
+
+    <module-components>
+        <component>
+            <implementation-class>org.fandev.module.FanModuleConfigurationEditorProvider</implementation-class>
+            <option name="type" value="FAN_MODULE"/>
+        </component>
+        <component>
+            <implementation-class>org.fandev.module.FanModuleSettings</implementation-class>
+            <option name="type" value="FAN_MODULE"/>
+        </component>
+    </module-components>
+
+    <actions>
+        <action id="org.fandev.actions.execution.RunFanScriptAction"
+                class="org.fandev.actions.execution.RunFanScriptAction"
+                text="Run Fantom script..." description="Runs Fantom scripts">
+        </action>
+        <action id="Fan.NewClass" class="org.fandev.actions.generation.NewFanClassAction"
+                text="Fantom Class" description="Create new Fantom class">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="Fan.Mixin" class="org.fandev.actions.generation.NewFanMixinAction"
+                text="Fantom Mixin" description="Create new Fantom mixin">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="Fan.NewClass"/>
+        </action>
+        <action id="Fan.Enum" class="org.fandev.actions.generation.NewFanEnumAction"
+                text="Fantom Enum" description="Create new Fantom enum">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="Fan.Mixin"/>
+        </action>
+        <action id="Fan.NewBuildScript" class="org.fandev.actions.generation.NewFanBuildScriptAction"
+                text="Fantom Build Script" description="Create new Fantom Build Script">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="Fan.Enum"/>
+        </action>
+        <action id="FanUnscramble" class="org.fandev.unscramble.FanUnscrambleAction" text="Analyze Fantom Stacktrace">
+            <add-to-group group-id="AnalyzeMenu" anchor="after" relative-to-action="Unscramble"/>    
+        </action>
+    </actions>
+</idea-plugin>

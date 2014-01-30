@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.fandev</groupId>
+    <artifactId>fan4idea</artifactId>
+    <version>0.0.6</version>
+    <packaging>jar</packaging>
+    <name>fan4idea</name>
+    <description>A Fan programming language for IntelliJ IDEA 8.x</description>
+
+    <url>http://wiki.jfrog.org/confluence/display/FANP/Home</url>
+    <issueManagement>
+        <url>http://issues.jfrog.org/jira/browse/FANP</url>
+        <system>Jira</system>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <name>Frederic Simon</name>
+        </developer>
+        <developer>
+            <name>Dror Bereznitsky</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:hg:http://hg.jfrog.org/hg/fan4idea/</connection>
+        <developerConnection>scm:hg:https://hg.jfrog.org/hg/fan4idea/</developerConnection>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+    </licenses>
+
+    <!-- FAN_HOME and IDEA_HOME must be defined -->
+    <properties>
+        <idea.version>9886</idea.version>
+        <fan.version>1.0.46</fan.version>
+        <idea.lib>${IDEA_HOME}/lib</idea.lib>
+        <fan.lib>${FAN_HOME}/lib/java</fan.lib>
+    </properties>
+
+    <dependencies>
+        <!-- Jetbrains dependencies -->
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>openapi</artifactId>
+            <version>${idea.version}</version>
+            <scope>system</scope>
+            <systemPath>${idea.lib}/openapi.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>idea</artifactId>
+            <version>${idea.version}</version>
+            <scope>system</scope>
+            <systemPath>${idea.lib}/idea.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>idea_rt</artifactId>
+            <version>${idea.version}</version>
+            <scope>system</scope>
+            <systemPath>${idea.lib}/idea_rt.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij.openapi</groupId>
+            <artifactId>extensions</artifactId>
+            <version>${idea.version}</version>
+            <scope>system</scope>
+            <systemPath>${idea.lib}/extensions.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij.openapi</groupId>
+            <artifactId>util</artifactId>
+            <version>${idea.version}</version>
+            <scope>system</scope>
+            <systemPath>${idea.lib}/util.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.intellij</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${idea.version}</version>
+            <scope>system</scope>
+            <systemPath>${idea.lib}/annotations.jar</systemPath>
+        </dependency>
+        <!-- Fan dependencies -->
+        <dependency>
+            <groupId>org.fandev</groupId>
+            <artifactId>sys</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${fan.lib}/sys.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>trove</groupId>
+            <artifactId>trove</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <!-- Other 3rd party -->
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>not-mac</id>
+            <activation>
+                <os>
+                    <family>!mac</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+    
+    <build>
+        <finalName>fan4idea</finalName>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                    <exclude>**/Thumbs.db</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/filtered-resources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assemble/assembly.xml</descriptor>
+                    </descriptors>
+                    <finalName>fan4idea-${version}</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

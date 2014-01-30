@@ -1,0 +1,48 @@
+package org.fandev.lang.fan.psi.impl;
+
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubElement;
+import org.fandev.lang.fan.FanSupportLoader;
+import org.fandev.lang.fan.psi.FanElement;
+import org.fandev.lang.fan.psi.FanFile;
+import org.fandev.lang.fan.psi.api.statements.typeDefs.FanTypeDefinition;
+import org.fandev.index.FanIndex;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author Dror Bereznitsky
+ * @date Jan 7, 2009 3:45:31 PM
+ */
+public class FanBaseElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements FanElement {
+    public FanBaseElementImpl(T t, @NotNull IStubElementType iStubElementType) {
+        super(t, iStubElementType);
+    }
+
+    public FanBaseElementImpl(ASTNode astNode) {
+        super(astNode);
+    }
+
+    @NotNull
+    public Language getLanguage() {
+        return FanSupportLoader.FAN.getLanguage();
+    }
+
+    @Override
+    public PsiElement getParent() {
+        return getParentByStub();
+    }
+
+    protected FanTypeDefinition getFanObjType() {
+        FanIndex index = (FanIndex) getProject().getComponent(FanIndex.COMPONENT_NAME);
+        FanFile objFile = (FanFile) index.getPsiFileByTypeName("Obj");
+        if (objFile != null && objFile.getTypeDefinitions().length == 1) {
+            return objFile.getTypeDefinitions()[0];
+        }
+        return null;
+    }
+}

@@ -1,0 +1,5 @@
+Dror Bereznitsky and Fred Simon
+Copyright 2008 Dror Bereznitsky and Fred Simon
+
+This product includes software developed at
+Fandev (http://www.fandev.org)
